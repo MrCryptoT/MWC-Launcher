@@ -1,18 +1,20 @@
 @Echo OFF
-REM Author MrT, Version 0.2
+REM Author MrT, Version 0.3
 :: Just a "Wrapper" around MWC Node and Wallet to make interaction a bit more Userfriendly
 :: Replace the Variables if Needed I assume the following: 
 :: This File, MWC-Wallet.exe and MWC.exe are all in the same Folder!
 :: Hint: You will need to type your password for some interactions, please stay safe out there!
 REM Never share customized scripts that might contain passwords! (Hence this Script doesnt ask for a password or gives a way to include it)
 
+	
 REM TO EDIT!  Fixxed Variables (Replace if necessary!)
 REM Define Folders of our executables (by default our execution directory)
 	set NodeLocation=%cd%
 	set WalletLocation=%cd%
-	set TransactionFilename=transaction.tx
+	set TransactionFilename=transaction.tx 
 	set Responsefilename=tx.response
-	
+	set NgrokLocation=%cd% REM This Component is optional!
+
 REM End of Editable part, doing some simple Logic down there 	
 
 REM Setup
@@ -24,7 +26,12 @@ REM Setup
 			Echo [ERROR:] Cannot locate Node! Please make sure your mwc.exe is actually saved under %NodeLocation% or edit the variable NodeLocation
 			goto Quit
 		)
-		
+		IF EXIST "%NgrokLocation%\ngrok.exe" (
+			Echo [INFO:] Located Ngrok
+		) ELSE (
+			Echo [WARN:] Cannot locate Ngrok! Please make sure your ngrok.exe is actually saved under %NgrokLocation% or edit the variable NgrokLocation
+			)
+			
 		IF EXIST "%WalletLocation%\Backups\" (
 			Echo [INFO:] Located Backup Folder for Slatefiles
 		) ELSE (
@@ -58,8 +65,8 @@ REM ####Modes####
 	
 :S
 :s	
-	
-	
+
+	REM Go in Wallet Dir
 	cd %WalletLocation%\
 	REM Send a transaction, ask which mode 
 	Echo.
@@ -72,7 +79,7 @@ REM ####Modes####
 		Echo [INFO:]Moved old Slatefile to Backups before creating new one
 		move %WalletLocation%\%TransactionFilename% %WalletLocation%\Backups\%TransactionFilename%
 	) ELSE (
-		REM not needed but here cuz im lazy, find the egg, keep it =) 
+	REM not needed but here cuz im lazy, find the egg, keep it =) 
 	)
 	
 	goto %method%
@@ -103,13 +110,20 @@ REM ####Modes####
 	REM Finalize a transaction
 	mwc-wallet.exe finalize -i %Responsefilename%
 	Echo.
-		goto Redo
+	goto Redo
 	
 :L
 :l
 	REM Wallet listen mode
 	start cmd.exe /k "Echo Enter your password to start listening!&&Echo Then return the the Launcher!&& mwc-wallet.exe listen"
 	rem Echo Enter your password in the newly entered windows and your Wallet will be listening!
+	set /p UsingNgrok=Should we start Ngrok? (Y)es or (N)o
+	IF "%UsingNgrok%" == "Y" (
+	goto ng
+	) 
+	IF "%UsingNgrok%" == "y" (
+	goto ng
+	) 
 	Echo.
 		goto Redo
 	
@@ -117,7 +131,6 @@ REM ####Modes####
 :i
 	mwc-wallet.exe info
 	Echo.
-
 
 :Redo
 	REM Define Interactive modes (Ask for startup vars?)
@@ -140,9 +153,3 @@ REM Interactive Shell/Commandprompt overtakes this current session, give control
 :C
 :c
 cmd /k Echo type mwc-wallet.exe help to get a list of commands!
-rem start cmd.exe /k "cd %WalletLocation%\&&Echo type mwc-wallet.exe help to get a list of commands!"
-
-REM Dev Notes
-REM To Implement:
-REM How to Grab Ngrok HTTP Tunnel address? 
-REM I'd like to Auto-implement ngrok, need to read the docs on how to grab the URL somehow
