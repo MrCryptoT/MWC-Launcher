@@ -1,18 +1,12 @@
 @Echo OFF
 REM IMPORTANT: DONT SHARE YOUR BATCHFILES
 REM TAKE SECURITY SERIOUS! STAY SAFE
-
-
-REM Author MrT, Version 0.4
-:: Just a "Wrapper" around MWC Node and Wallet to make interaction a bit more Userfriendly
-:: Replace the Variables if Needed I assume the following: 
-:: This File, MWC-Wallet.exe and MWC.exe are all in the same Folder!
-:: Hint: You will need to type your password for some interactions, please stay safe out there!
-REM Never share customized scripts that might contain passwords! (Hence this Script doesnt ask for a password or gives a way to include it)
-
 	
 REM TO EDIT!  
 	set mypassword=NEVERSHAREYOURBATCHFILESORPASSWORD!
+
+
+
 REM Only replace if necessary
 REM Define Folders of our executables (by default our execution directory)
 	set NodeLocation=%cd%
@@ -207,3 +201,14 @@ REM Interactive Shell/Commandprompt overtakes this current session, give control
 :C
 :c
 cmd /k Echo type mwc-wallet.exe help to get a list of commands!
+
+
+
+
+REM Author MrT, Version 0.4
+:: Just a "Wrapper" around MWC Node and Wallet to make interaction a bit more Userfriendly
+:: Replace the Variables if Needed I assume the following: 
+:: This File, MWC-Wallet.exe and MWC.exe are all in the same Folder!
+:: Hint: You will need to type your password for some interactions, please stay safe out there!
+REM Never share customized scripts that might contain passwords! (Hence this Script doesnt ask for a password or gives a way to include it)
+
