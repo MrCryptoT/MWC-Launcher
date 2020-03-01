@@ -87,19 +87,23 @@ REM ####Modes####
 	Echo.
 	set /p Amount=What Amount to send?
 	Echo.
-	
-	REM Move old Slatefile in Backupfolder
-	IF EXIST "%WalletLocation%\%TransactionFilename%" (
-		If "%Debugmode%" == "TRUE" Echo [INFO:]Moved old Slatefile to Backups before creating new one
-		move %WalletLocation%\%TransactionFilename% %WalletLocation%\Backups\%TransactionFilename%
-	) ELSE (
-	REM not needed but here cuz im lazy, find the egg, keep it =) 
-	)
-	
+			
 	goto %method%
 		
 		:File
 		:file
+		
+		REM Move old Slatefile in Backupfolder
+		IF EXIST "%WalletLocation%\%TransactionFilename%" (
+			Echo [INFO:] Located a TransactionFile in Walletfolder, Moving to Backupfolder so we can create a new one
+			If "%Debugmode%" == "TRUE" Echo [INFO:]Moved old Slatefile to Backups before creating new one
+			For /f "tokens=2-4 delims=/ " %%a in ('date /t') do (set mydate=%%c-%%a-%%b)
+			For /f "tokens=1-2 delims=/:" %%a in ('time /t') do (set mytime=%%a%%b)
+			move "%WalletLocation%\%TransactionFilename%" "%WalletLocation%\Backups\%mydate%_%mytime%_%TransactionFilename%"
+		) ELSE (
+		REM not needed but here cuz im lazy, find the egg, keep it =) 
+		)
+		
 			mwc-wallet.exe send -m file -d %TransactionFilename% %Amount%
 			Echo [INFO:]Your payment File will be located in %WalletLocation%\%TransactionFilename%
 			Echo.
@@ -114,16 +118,24 @@ REM ####Modes####
 :f
 	REM Check if we can find the file to process, if not warn user!
 	IF EXIST "%WalletLocation%\%Responsefilename%" (
-		Echo [INFO:] Located a Responsefile matching variable
+		Echo [INFO:] Located a Responsefile in Walletfolder
 	) ELSE (
-		Echo [WARN:] Cannot locate Responsefilename! Might not exist yet
-		Echo Please make sure your Responsefile is actually saved under: 
-		Echo %WalletLocation% and is named %Responsefilename% or edit the variable Responsefilename
+		If "%Debugmode%" == "TRUE" ECHO Searching a Responsefile in Downloads, Walletfolder was empty
+		IF EXIST "c:\users\%username%\Downloads\%Responsefilename%" move "c:\users\%username%\Downloads\%Responsefilename%" "%WalletLocation%\%Responsefilename%"
+		IF EXIST "%WalletLocation%\%Responsefilename%" goto finishFinalize
+		
+		Echo [WARN:] Cannot locate Responsefilename! (Not in Downloads nor in WalletFolder) 
+		Echo Please make sure your Responsefile is actually named  %Responsefilename% 
 	)
-	
+	:finishFinalize
 	REM Finalize a transaction
 	Echo.
 	mwc-wallet.exe finalize -i %Responsefilename%
+	
+	If "%Debugmode%" == "TRUE" ECHO Moving processed Slate File into Backup Folder
+	For /f "tokens=2-4 delims=/ " %%a in ('date /t') do (set mydate=%%c-%%a-%%b)
+	For /f "tokens=1-2 delims=/:" %%a in ('time /t') do (set mytime=%%a%%b)
+	move "%WalletLocation%\%Responsefilename%" "%Backupfolder%\%mydate%_%mytime%_%Responsefilename%"
 	Echo.
 	goto Redo
 	
