@@ -11,8 +11,10 @@
  - WalletLocation=PathofyourCLIWallet
  - TransactionFilename=Whatevernameyourtransactionfilesshouldhave
  - Responsefilename=thenameofyourreceivedresposefile
-
+ - NgrokLocation=PathofyourNgrokDirectory
 	
 Remarks: 
 I didn't include the password parameter intentionally. 
 For Security concerns I think this should only be done by advanced users and can easily be implmeneted if you'd want to!
+
+Ngrok's custom subdomains are sadly locked behind a payed plan. (And if implemented the Owner probably could inspect all the traffic which isn't really ethical. Therefore I cannot automate Ngrok to the point I wanted, you'll still need to manually get your Ngrok URL (which changes everytime)
