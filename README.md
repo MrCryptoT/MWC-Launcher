@@ -7,10 +7,10 @@
  This File, MWC-Wallet.exe and MWC.exe are all in the same Folder!
  
  *Replace the following Variables if Needed:*
-	- NodeLocation=PathofyourNodeDirectory
-	- WalletLocation=PathofyourCLIWallet
-	- TransactionFilename=Whatevernameyourtransactionfilesshouldhave
-	- Responsefilename=thenameofyourreceivedresposefile
+ - NodeLocation=PathofyourNodeDirectory
+ - WalletLocation=PathofyourCLIWallet
+ - TransactionFilename=Whatevernameyourtransactionfilesshouldhave
+ - Responsefilename=thenameofyourreceivedresposefile
 
 	
 Remarks: 
