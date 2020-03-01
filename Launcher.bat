@@ -3,7 +3,7 @@ REM IMPORTANT: DONT SHARE YOUR BATCHFILES
 REM TAKE SECURITY SERIOUS! STAY SAFE
 
 
-REM Author MrT, Version 0.3
+REM Author MrT, Version 0.4
 :: Just a "Wrapper" around MWC Node and Wallet to make interaction a bit more Userfriendly
 :: Replace the Variables if Needed I assume the following: 
 :: This File, MWC-Wallet.exe and MWC.exe are all in the same Folder!
