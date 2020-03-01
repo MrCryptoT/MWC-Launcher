@@ -2,3 +2,4 @@
 *.tx
 *.response
 *.exe
+/Backups
