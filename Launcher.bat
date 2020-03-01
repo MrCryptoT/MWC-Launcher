@@ -76,7 +76,7 @@ REM Define Interactive modes (Ask for startup vars?)
 	Echo.
 	Echo "What do you want to do? (Type letter and press Enter)"
 	Echo.
-	set /p mode=(S)end, (F)inalize, (L)isten, (I)nfo, (C)ommandprompt, (Q)uit
+	set /p mode=(S)end, (F)inalize, (L)isten, (I)nfo, (C)ommandprompt, (Q)uit 
 	Echo.
 		GOTO %mode%
 
@@ -92,7 +92,7 @@ REM ####Modes####
 	Echo.
 	set /p method=Send by (File) or (HTTP) 
 	Echo.
-	set /p Amount=What Amount to send?
+	set /p Amount=What Amount to send? (Enter how many MWC you want to send as a number and press Enter)   
 	Echo.
 			
 	goto %method%
@@ -158,7 +158,7 @@ REM ####Modes####
 	Echo.
 	Echo Wallet is listening now =) 
 	rem Echo Enter your password in the newly entered windows and your Wallet will be listening!
-	set /p UsingNgrok=Should we start Ngrok? (Y)es or (N)o
+	set /p UsingNgrok=Should we start Ngrok? (Y)es or (N)o (Enter Letter in parenthesis and press Enter)   
 	Echo.
 	IF "%UsingNgrok%" == "Y" (
 	goto ng
@@ -184,9 +184,9 @@ REM ####Modes####
 	Echo.
 	Echo.
 	REM Define Interactive modes (Ask for startup vars?)
-	Echo "Anything else - or do you want to Quit?"
+	Echo "Anything else you want to do? (Type letter and press Enter)"
 	Echo.
-	set /p mode=(S)end, (F)inalize, (L)isten, (I)nfo, (C)ommandprompt, (Q)uit
+	set /p mode=(S)end, (F)inalize, (L)isten, (I)nfo, (C)ommandprompt, (Q)uit   
 	Echo.
 		GOTO %mode%
 		
