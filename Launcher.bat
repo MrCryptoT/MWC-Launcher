@@ -15,7 +15,7 @@ REM Define Folders of our executables (by default our execution directory)
 	set Responsefilename=tx.response
 	
 	REM This Componentss are optional!
-	set NgrokLocation=%cd% 
+	set NgrokLocation=%cd%
 	set Debugmode=TRUE
 
 REM End of Editable part, doing some simple Logic down there 	
