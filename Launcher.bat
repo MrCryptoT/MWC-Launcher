@@ -11,17 +11,19 @@ REM Author MrT, Version 0.4
 REM Never share customized scripts that might contain passwords! (Hence this Script doesnt ask for a password or gives a way to include it)
 
 	
-REM TO EDIT!  Fixxed Variables (Replace if necessary!)
+REM TO EDIT!  
+	set mypassword=NEVERSHAREYOURBATCHFILESORPASSWORD!
+REM Only replace if necessary
 REM Define Folders of our executables (by default our execution directory)
 	set NodeLocation=%cd%
 	set WalletLocation=%cd%
+REM Ngrok is optional but heavilly recommended!
+	set NgrokLocation=%cd%
+REM Names of Slate Files 
 	set TransactionFilename=transaction.tx 
 	set Responsefilename=tx.response
-	set mypassword=NEVERSHAREYOURBATCHFILESORPASSWORD!
-	
-	REM This Componentss are optional!
-	set NgrokLocation=%cd%
-	set Debugmode=TRUE
+REM Set to "TRUE" for detailed messaged, to "FALSE" if not
+	set Debugmode=FALSE
 
 REM End of Editable part, doing some simple Logic down there 	
 
@@ -30,6 +32,8 @@ REM Setup
 	REM Sanity Check time <3
 		
 		REM Check if Node exists where we expect it 
+		IF "%mypassword%" == "NEVERSHAREYOURBATCHFILESORPASSWORD!" Echo [ERROR:] You didn't change the password, please make sure to edit "mypassword" of the File "Launcher.bat" in %cd% (Rightclick and choose edit) && goto Quit
+		
 		IF EXIST "%NodeLocation%\mwc.exe" (
 			Echo [INFO:] Located Node
 		) ELSE (
@@ -100,7 +104,7 @@ REM ####Modes####
 		IF EXIST "%WalletLocation%\%TransactionFilename%" (
 			Echo [INFO:] Located a TransactionFile in Walletfolder, Moving to Backupfolder so we can create a new one
 			If "%Debugmode%" == "TRUE" Echo [INFO:]Moved old Slatefile to Backups before creating new one
-			move "%WalletLocation%\%TransactionFilename%" "%WalletLocation%\Backups\%DATE%_%TIME%__%TransactionFilename%"
+			move "%WalletLocation%\%TransactionFilename%" "%WalletLocation%\Backups\%DATE%_%TIME%__%TransactionFilename%" >NULL
 		) ELSE (
 		REM not needed but here cuz im lazy, find the egg, keep it =) 
 		)
@@ -124,7 +128,7 @@ REM ####Modes####
 	) ELSE (
 		If "%Debugmode%" == "TRUE" ECHO Searching a Responsefile in Downloads, Walletfolder was empty
 	)
-		IF EXIST "c:\users\%username%\Downloads\%Responsefilename%" move "c:\users\%username%\Downloads\%Responsefilename%" "%WalletLocation%\%Responsefilename%"
+		IF EXIST "c:\users\%username%\Downloads\%Responsefilename%" move "c:\users\%username%\Downloads\%Responsefilename%" "%WalletLocation%\%Responsefilename%" >NULL
 		REM Found it and moved it, no need to inform so bail 
 		IF EXIST "%WalletLocation%\%Responsefilename%" goto finishFinalize
 		Echo [WARN:] Cannot locate Responsefilename! (Not in Downloads nor in WalletFolder) 
@@ -138,9 +142,9 @@ REM ####Modes####
 	Echo.
 	mwc-wallet.exe -p %mypassword% finalize -i %Responsefilename%
 	REM Wait for Slatefile to be accessible again to move it when done 
-	timeout 2
+	timeout 2 >NULL
 	If "%Debugmode%" == "TRUE" ECHO Moving processed Slate File into Backup Folder
-	move "%WalletLocation%\%Responsefilename%" "%Backupfolder%\%DATE%_%TIME%__%Responsefilename%"
+	move "%WalletLocation%\%Responsefilename%" "%Backupfolder%\%DATE%_%TIME%__%Responsefilename%" >NULL
 	Echo.
 	goto Redo
 	
