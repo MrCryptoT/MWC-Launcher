@@ -1,20 +1,23 @@
 # MWC Launcher
- A Script to Wrap around the MWC Wallet and MWC Node to make transactions easier using the CLI Wallet
+IMPORTANT: 
+DONT SHARE YOUR BATCHFILES
+TAKE SECURITY SERIOUS! STAY SAFEA Script to Wrap around the MWC Wallet and MWC Node to make transactions easier using the CLI Wallet
  
- Simply Copy the Launcher into the same Directory as your mwc-wallet.exe and mwc.exe
+ ##How to use
+ 1) Copy the Launcher.bat into the same Directory as your mwc-wallet.exe and mwc.exe and ngrok.exe
+ 2) Edit Variable to match your password (And Directories if they are not in the same one)
  
-## This script assumes the following:
+ This script assumes the following: 
  This File, MWC-Wallet.exe and MWC.exe are all in the same Folder!
+ If this is true, only edit the pw and your set to go!
  
- *Replace the following Variables if Needed:*
- - NodeLocation=PathofyourNodeDirectory
- - WalletLocation=PathofyourCLIWallet
- - TransactionFilename=Whatevernameyourtransactionfilesshouldhave
- - Responsefilename=thenameofyourreceivedresposefile
- - NgrokLocation=PathofyourNgrokDirectory
+ Replace the following Variables ONLY if Needed:
+-NodeLocation=PathofyourNodeDirectory
+-WalletLocation=PathofyourCLIWallet
+-TransactionFilename=Whatevernameyourtransactionfilesshouldhave
+-Responsefilename=thenameofyourreceivedresposefile
+
 	
 Remarks: 
-I didn't include the password parameter intentionally. 
-For Security concerns I think this should only be done by advanced users and can easily be implmeneted if you'd want to!
-
-Ngrok's custom subdomains are sadly locked behind a payed plan. (And if implemented the Owner probably could inspect all the traffic which isn't really ethical. Therefore I cannot automate Ngrok to the point I wanted, you'll still need to manually get your Ngrok URL (which changes everytime)
+Responsefiles might differ from Exchange to exchange, please consider this
+Manual CLI might still be faster for finalizing.
