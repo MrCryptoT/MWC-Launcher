@@ -17,11 +17,13 @@ TAKE SECURITY SERIOUS! STAY SAFE
  If this is true, only edit the pw and your set to go!
  
  ###  Replace the following Variables ONLY if Needed:
-- NodeLocation=PathofyourNodeDirectory
-- WalletLocation=PathofyourCLIWallet
-- NgrokLocation=PathofNgrok
-- TransactionFilename=Whatevernameyourtransactionfilesshouldhave
-- Responsefilename=thenameofyourreceivedresposefile
+- NodeLocation = PathofyourNodeDirectory
+- WalletLocation = PathofyourCLIWallet
+- NgrokLocation = PathofNgrok
+- TransactionFilename = Whatevernameyourtransactionfilesshouldhave
+- Responsefilename = thenameofyourreceivedresposefile
+- Debugmode = TRUE/FALSE (TRUE displays more detailed Information)
+- CloseFast = TRUE/FALSE (TRUE kips warning before closing and just quit quickly)
 
 	
 Remarks: 
