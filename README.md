@@ -23,7 +23,7 @@ TAKE SECURITY SERIOUS! STAY SAFE
 - TransactionFilename = Whatevernameyourtransactionfilesshouldhave
 - Responsefilename = thenameofyourreceivedresposefile
 - Debugmode = TRUE/FALSE (TRUE displays more detailed Information)
-- CloseFast = TRUE/FALSE (TRUE kips warning before closing and just quit quickly)
+- CloseFast = TRUE/FALSE (TRUE skips warning before closing and just quit quickly)
 
 	
 Remarks: 
