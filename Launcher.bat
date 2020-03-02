@@ -8,7 +8,16 @@ REM TO EDIT!
 
 
 REM Only replace if necessary
+
 REM Define Folders of our executables (by default our execution directory)
+REM Some examples provided below, if in Doubdt, Rightclick the folder in Windows Explorer and choose "Copy Path"
+
+REM An Example if the Wallet is in a subfolder called "mwc-wallet" => 
+REM set WalletLocation=%cd%\mwc-wallet
+
+REM An Example if the Wallet AND this Script Are in a subfolder and the Node is "above" us => 
+REM set WalletLocation=%cd%\..\
+
 	set NodeLocation=%cd%
 	set WalletLocation=%cd%
 REM Ngrok is optional but heavilly recommended!
