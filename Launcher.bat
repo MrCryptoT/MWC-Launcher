@@ -19,7 +19,7 @@ REM Some examples provided below, if in Doubdt, Rightclick the folder in Windows
 	REM Set to "TRUE" if Launcher should Quit instantly when choosing "quit"
 	set CloseFast=FALSE
 	REM An Example if the Wallet is in a subfolder called "mwc-wallet" => 
-		REM set WalletLocation=%cd%\mwc-wallet =>
+		REM set WalletLocation=%cd%\mwc-wallet 
 	REM An Example if the Wallet AND this Script Are in a subfolder and the Node is "above" us => 
 		REM set NodeLocation=%cd%\..\
 	REM An Example for a copied path => 
