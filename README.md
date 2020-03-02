@@ -1,10 +1,10 @@
 # MWC Launcher
 
+A Script to Wrap around the MWC Wallet and MWC Node to make transactions easier using the CLI Wallet
+
 *IMPORTANT:* 
 DONT SHARE YOUR BATCHFILES
 TAKE SECURITY SERIOUS! STAY SAFE
-
-A Script to Wrap around the MWC Wallet and MWC Node to make transactions easier using the CLI Wallet
  
  ## How to use
  1) Copy the Launcher.bat into the same Directory as your mwc-wallet.exe and mwc.exe and ngrok.exe
@@ -16,7 +16,7 @@ A Script to Wrap around the MWC Wallet and MWC Node to make transactions easier 
  Launcher.bat, MWC-Wallet.exe and MWC.exe are all in the same Folder!
  If this is true, only edit the pw and your set to go!
  
- Replace the following Variables ONLY if Needed:
+ ###  Replace the following Variables ONLY if Needed:
  - NodeLocation=PathofyourNodeDirectory
 - WalletLocation=PathofyourCLIWallet
 - TransactionFilename=Whatevernameyourtransactionfilesshouldhave
