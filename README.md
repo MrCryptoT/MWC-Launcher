@@ -17,8 +17,9 @@ TAKE SECURITY SERIOUS! STAY SAFE
  If this is true, only edit the pw and your set to go!
  
  ###  Replace the following Variables ONLY if Needed:
- - NodeLocation=PathofyourNodeDirectory
+- NodeLocation=PathofyourNodeDirectory
 - WalletLocation=PathofyourCLIWallet
+- NgrokLocation=PathofNgrok
 - TransactionFilename=Whatevernameyourtransactionfilesshouldhave
 - Responsefilename=thenameofyourreceivedresposefile
 
