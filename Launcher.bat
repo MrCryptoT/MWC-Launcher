@@ -18,16 +18,19 @@ REM Names of Slate Files
 	set Responsefilename=tx.response
 REM Set to "TRUE" for detailed messaged, to "FALSE" if not
 	set Debugmode=FALSE
-
+REM Set to "TRUE" if Launcher should Quit instantly when choosing "quit"
+	set CloseFast=FALSE
+	
 REM End of Editable part, doing some simple Logic down there 	
+
 
 REM Setup
 	REM Make sure everything is as we assume 
 	REM Sanity Check time <3
 		
-		REM Check if Node exists where we expect it 
+		REM Check if User edited Password =) 
 		IF "%mypassword%" == "NEVERSHAREYOURBATCHFILESORPASSWORD!" Echo [ERROR:] You didn't change the password, please make sure to edit "mypassword" of the File "Launcher.bat" in %cd% (Rightclick and choose edit) && goto Quit
-		
+		REM Check if Node exists where we expect it 
 		IF EXIST "%NodeLocation%\mwc.exe" (
 			Echo [INFO:] Located Node
 		) ELSE (
@@ -135,8 +138,8 @@ REM ####Modes####
 	Echo.
 	Echo.
 	mwc-wallet.exe -p %mypassword% finalize -i %Responsefilename%
-	REM Wait for Slatefile to be accessible again to move it when done 
-	timeout 2 >NULL
+	REM Wait for Slatefile to be accessible again to move it when done (just to make sure it isnt locked)
+	timeout 5 >NULL
 	If "%Debugmode%" == "TRUE" ECHO Moving processed Slate File into Backup Folder
 	move "%WalletLocation%\%Responsefilename%" "%Backupfolder%\%DATE%_%TIME%__%Responsefilename%" >NULL
 	Echo.
@@ -160,6 +163,12 @@ REM ####Modes####
 	IF "%UsingNgrok%" == "y" (
 	goto ng
 	) 
+	IF "%UsingNgrok%" == "yes" (
+	goto ng
+	)
+	IF "%UsingNgrok%" == "Yes" (
+	goto ng
+	)
 	Echo.
 	goto Redo
 :ng
@@ -191,7 +200,7 @@ REM ####Modes####
 	Echo [WARN:] This will close all of your command prompts!
 	ECHO.
 	Echo Stay safe out there! NEVER SHARE YOUR BATCHFILES!!!
-	pause
+	If "%CloseFast%" == "FALSE" pause
 	taskkill /IM mwc.exe /F
 	taskkill /IM mwc-wallet.exe  /F
 	taskkill /IM ngrok.exe  /F
