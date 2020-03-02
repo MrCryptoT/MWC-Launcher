@@ -127,6 +127,8 @@ REM ####Modes####
 				
 :F
 :f
+	REM Go in Wallet Dir
+	cd %WalletLocation%\
 	REM Check if we can find the file to process, if not search or inform user!
 	IF EXIST "%WalletLocation%\%Responsefilename%" (
 		Echo [INFO:] Located a Responsefile in Walletfolder
@@ -156,6 +158,8 @@ REM ####Modes####
 	
 :L
 :l
+	REM Go in Wallet Dir
+	cd %WalletLocation%\
 	REM Wallet listen mode
 	start cmd.exe /c "mwc-wallet.exe -p %mypassword% listen"
 	Echo.
@@ -188,6 +192,8 @@ REM ####Modes####
 	goto Redo
 :I
 :i
+	REM Go in Wallet Dir
+	cd %WalletLocation%\
 	mwc-wallet.exe -p %mypassword% info
 	Echo.
 
@@ -215,9 +221,12 @@ REM ####Modes####
 	taskkill /IM ngrok.exe  /F
 	taskkill /IM cmd.exe  /F
 	quit
-REM Interactive Shell/Commandprompt overtakes this current session, give control back to uer 	
+	
 :C
 :c
+REM Interactive Shell/Commandprompt overtakes this current session, give control back to user 	
+REM Go in Wallet Dir
+cd %WalletLocation%\
 cmd /k Echo type mwc-wallet.exe help to get a list of commands!
 
 
