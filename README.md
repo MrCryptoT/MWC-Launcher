@@ -30,4 +30,5 @@ Remarks:
 Responsefiles might differ from Exchange to exchange, I just assume Names in this Script
 Manual CLI might still be faster for finalizing.
 
-This Project Includes an Exe File I deployed, to get a Fully wrapped Version without some Minor Improvements, just download Whiney Weasel (V0.4)
+This Project Includes an Exe File I deployed (RegExCHLPR.exe) which is fully open source and quite simple, you can check the code here => https://github.com/T0mH4rr1s0n/RegExCHLPR/blob/master/Module1.vb
+If you don't want to use my executable and only this Script Please download Whiney Weasel (V0.4) (an older Version which does the job)
