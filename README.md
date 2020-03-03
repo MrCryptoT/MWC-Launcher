@@ -29,3 +29,5 @@ TAKE SECURITY SERIOUS! STAY SAFE
 Remarks: 
 Responsefiles might differ from Exchange to exchange, I just assume Names in this Script
 Manual CLI might still be faster for finalizing.
+
+This Project Includes an Exe File I deployed, to get a Fully wrapped Version without some Minor Improvements, just download Whiney Weasel (V0.4)
