@@ -13,18 +13,19 @@ REM Some examples provided below, if in Doubdt, Rightclick the folder in Windows
 	set WalletLocation=%cd%
 	set NgrokLocation=%cd%
 	set TransactionFilename=transaction.tx 
-	set Responsefilename=tx.response
+	set Responsefilenameending=tx.response
 	REM Set to "TRUE" for detailed messaged, to "FALSE" if not
-	set Debugmode=FALSE
+	set Debugmode=TRUE
 	REM Set to "TRUE" if Launcher should Quit instantly when choosing "quit"
-	set CloseFast=FALSE
+	set CloseFast=TRUE
 	REM An Example if the Wallet is in a subfolder called "mwc-wallet" => 
 		REM set WalletLocation=%cd%\mwc-wallet 
 	REM An Example if the Wallet AND this Script Are in a subfolder and the Node is "above" us => 
 		REM set NodeLocation=%cd%\..\
 	REM An Example for a copied path => 
 		REM set NodeLocation=C:\_Custom\Bitcoin_Wallets\mwc\CLI\mwc-wallet
-
+	REM Define which folders to search for Slatefiles, supply more by adding &&"folderlocation"&&"folderpath2" and so on 
+	set folderstocheckforslatefiles="c:\users\%username%\downloads"&&"%NodeLocation%"&&"%cd%"&&"c:\users\%username%\Desktop"
 REM No Further editing needed, Logic part down here
 
 REM Pre-Setup
@@ -102,25 +103,30 @@ REM Send a transaction, ask which mode
 	REM Go in Wallet Dir
 	cd %WalletLocation%\
 	REM Check if we can find the file to process, if not search or inform user!
-	IF EXIST "%WalletLocation%\%Responsefilename%" (
-		Echo [INFO:] Located a Responsefile in Walletfolder
-		IF EXIST "%WalletLocation%\%Responsefilename%" goto finishFinalize
+	IF EXIST "%WalletLocation%\%Responsefilenameending%" (
+		Echo [INFO:] Located a Responsefile in Walletfolder. Going to assume it s the correct one and process
+		IF EXIST "%WalletLocation%\%Responsefilenameending%" goto finishFinalize
 	) ELSE (
-		If "%Debugmode%" == "TRUE" ECHO Searching a Responsefile in Downloads, Walletfolder was empty
+		If "%Debugmode%" == "TRUE" ECHO Searching a Responsefile in specified Folderss
 	)
-		IF EXIST "c:\users\%username%\Downloads\%Responsefilename%" move "c:\users\%username%\Downloads\%Responsefilename%" "%WalletLocation%\%Responsefilename%" > nul 2>&1
+		
+		REM Call Regex Helper to quickly grab most current Slatefile if found in different folders
+		for /f "tokens=*" %%i in ('RegExCHLPR.exe %folderstocheckforslatefiles% transaction.tx') do set "foundSlateFile=%%i"
+		IF DEFINED foundSlateFile move "%foundSlateFile%" "%WalletLocation%\%Responsefilenameending%" > nul 2>&1
+				
 		REM Found it and moved it, no need to inform so bail 
-		IF EXIST "%WalletLocation%\%Responsefilename%" goto finishFinalize
-		Echo [WARN:] Cannot locate Responsefilename! (Not in Downloads nor in WalletFolder) 
-		Echo Please make sure your Responsefile is actually named  %Responsefilename% 
+		IF EXIST "%WalletLocation%\%Responsefilenameending%" goto finishFinalize
+		REM If we arrive here no Slatefile was found, let user know Fileending might be different
+		Echo [WARN:] Cannot locate Responsefilename! (Not in Downloads nor in any of the specified Folders) 
+		Echo Please make sure your Responsefiles Name ends with %Responsefilenameending% 
 	:finishFinalize
 	REM Finalize a transaction
 	Echo. && Echo. && Echo.
-	mwc-wallet.exe -p %mypassword% finalize -i %Responsefilename%
+	mwc-wallet.exe -p %mypassword% finalize -i %Responsefilenameending%
 	REM Wait for Slatefile to be accessible again to move it when done (just to make sure it isnt locked)
 	timeout 5 > nul 2>&1
 	If "%Debugmode%" == "TRUE" ECHO Moving processed Slate File into Backup Folder
-	move "%WalletLocation%\%Responsefilename%" "%Backupfolder%\%DATE%_%TIME%__%Responsefilename%" > nul 2>&1
+	move "%WalletLocation%\%Responsefilenameending%" "%Backupfolder%\%DATE%_%TIME%__%Responsefilenameending%" > nul 2>&1
 	Echo. 
 		goto Redo
 :L
@@ -145,7 +151,6 @@ REM Send a transaction, ask which mode
 	cd %WalletLocation%\
 	mwc-wallet.exe -p %mypassword% info
 	Echo.
-
 :Redo
 	Echo. && Echo. && Echo.
 	REM Define Interactive modes (Ask for startup vars?)
@@ -171,9 +176,9 @@ REM Send a transaction, ask which mode
 :c
 REM Interactive Shell/Commandprompt 	
 REM Go in Wallet Dir and give control back to user
-cd %WalletLocation%\ && cmd /k Echo type mwc-wallet.exe help to get a list of commands!
+cd %WalletLocation%\ && cmd /k Echo type mwc-wallet.exe help to get a list of commands or mwc-wallet.exe init to initialize a new wallet
 
-REM Author MrT, Version 0.4.4
+REM Author MrT, Version 0.5
 :: Just a "Wrapper" around MWC Node and Wallet to make interaction a bit more Userfriendly
 :: Replace the Variables if Needed I assume the following: 
 :: This File, MWC-Wallet.exe and MWC.exe are all in the same Folder!
