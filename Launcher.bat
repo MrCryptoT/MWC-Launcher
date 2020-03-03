@@ -25,7 +25,7 @@ REM Some examples provided below, if in Doubdt, Rightclick the folder in Windows
 	REM An Example for a copied path => 
 		REM set NodeLocation=C:\_Custom\Bitcoin_Wallets\mwc\CLI\mwc-wallet
 	REM Define which folders to search for Slatefiles, supply more by adding &&"folderlocation"&&"folderpath2" and so on 
-	set folderstocheckforslatefiles="c:\users\%username%\downloads"&&"%NodeLocation%"&&"%cd%"&&"c:\users\%username%\Desktop"
+		set "folderstocheckforslatefiles="c:\users\%username%\downloads"^&^&"%NodeLocation%"^&^&"%cd%"^&^&"c:\users\%username%\Desktop""
 REM No Further editing needed, Logic part down here
 
 REM Pre-Setup
