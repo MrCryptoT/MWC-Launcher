@@ -3,7 +3,6 @@ REM IMPORTANT: DONT SHARE YOUR BATCHFILES - TAKE SECURITY SERIOUS! STAY SAFE
 	
 REM Edit your password so you don't constantly need to confirm the password when interacting with the cli Wallet!  
 	set mypassword=NEVERSHAREYOURBATCHFILESORPASSWORD!
-
 	
 REM Only replace the following Variables if necessary (not everything in 1 folder)
 
@@ -25,7 +24,7 @@ REM Some examples provided below, if in Doubdt, Rightclick the folder in Windows
 	REM An Example for a copied path => 
 		REM set NodeLocation=C:\_Custom\Bitcoin_Wallets\mwc\CLI\mwc-wallet
 	REM Define which folders to search for Slatefiles, supply more by adding &&"folderlocation"&&"folderpath2" and so on 
-		set "folderstocheckforslatefiles="c:\users\%username%\downloads"^&^&"%NodeLocation%"^&^&"%cd%"^&^&"c:\users\%username%\Desktop""
+	set folderstocheckforslatefiles=c:\users\%username%\downloads\\%NodeLocation%\\%cd%\\c:\users\%username%\Desktop
 REM No Further editing needed, Logic part down here
 
 REM Pre-Setup
@@ -102,6 +101,14 @@ REM Send a transaction, ask which mode
 :f
 	REM Go in Wallet Dir
 	cd %WalletLocation%\
+
+	REM Check if we can find old transactionfile!
+	IF EXIST "%WalletLocation%\%TransactionFilename%" If "%Debugmode%" == "TRUE" ECHO [INFO:] Located old Transactionfile in Walletfolder. Moving to Backupfolder
+	IF EXIST "%WalletLocation%\%TransactionFilename%" move "%WalletLocation%\%TransactionFilename%" "%Backupfolder%\%DATE%_%TIME%__%TransactionFilename%" > nul 2>&1
+	) ELSE (
+		
+	)
+	
 	REM Check if we can find the file to process, if not search or inform user!
 	IF EXIST "%WalletLocation%\%Responsefilenameending%" (
 		Echo [INFO:] Located a Responsefile in Walletfolder. Going to assume it s the correct one and process
@@ -109,11 +116,13 @@ REM Send a transaction, ask which mode
 	) ELSE (
 		If "%Debugmode%" == "TRUE" ECHO Searching a Responsefile in specified Folderss
 	)
-		
-		REM Call Regex Helper to quickly grab most current Slatefile if found in different folders
-		for /f "tokens=*" %%i in ('RegExCHLPR.exe %folderstocheckforslatefiles% transaction.tx') do set "foundSlateFile=%%i"
-		IF DEFINED foundSlateFile move "%foundSlateFile%" "%WalletLocation%\%Responsefilenameending%" > nul 2>&1
-				
+				echo %folderstocheckforslatefiles%
+				REM Call Regex Helper to quickly grab most current Slatefile if found in different folders
+		for /f "tokens=*" %%i in ('RegExCHLPR.exe %folderstocheckforslatefiles% .response') do set "foundSlateFile=%%i"
+		timeout 1
+				IF DEFINED foundSlateFile move "%foundSlateFile%" "%WalletLocation%\%Responsefilenameending%" > nul 2>&1
+				If "%Debugmode%" == "TRUE" echo Current Slatefile according to Algo: %foundSlateFile%
+		timeout 3
 		REM Found it and moved it, no need to inform so bail 
 		IF EXIST "%WalletLocation%\%Responsefilenameending%" goto finishFinalize
 		REM If we arrive here no Slatefile was found, let user know Fileending might be different
@@ -183,4 +192,12 @@ REM Author MrT, Version 0.5
 :: Replace the Variables if Needed I assume the following: 
 :: This File, MWC-Wallet.exe and MWC.exe are all in the same Folder!
 :: Hint: You will need to type your password for some interactions, please stay safe out there!
+:: Dev Notes: Tested: 
+::					-Listen 
+::					-Send (File) 
+::					-Info
+::					-CmdPrompt
+::					-Quit
+::					-Finalize
+
 REM Never share customized scripts that might contain passwords! (Hence this Script doesnt ask for a password or gives a way to include it)
