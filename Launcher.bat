@@ -4,6 +4,7 @@ REM IMPORTANT: DONT SHARE YOUR BATCHFILES - TAKE SECURITY SERIOUS! STAY SAFE
 REM Edit your password so you don't constantly need to confirm the password when interacting with the cli Wallet!  
 	set mypassword=NEVERSHAREYOURBATCHFILESORPASSWORD!
 	
+	
 REM Only replace the following Variables if necessary (not everything in 1 folder)
 
 REM Define Folders of our executables (by default our execution directory)
@@ -17,6 +18,7 @@ REM Some examples provided below, if in Doubdt, Rightclick the folder in Windows
 	set Debugmode=TRUE
 	REM Set to "TRUE" if Launcher should Quit instantly when choosing "quit"
 	set CloseFast=TRUE
+	set Backupfolder=%cd%\Backups
 	REM An Example if the Wallet is in a subfolder called "mwc-wallet" => 
 		REM set WalletLocation=%cd%\mwc-wallet 
 	REM An Example if the Wallet AND this Script Are in a subfolder and the Node is "above" us => 
@@ -28,6 +30,7 @@ REM Some examples provided below, if in Doubdt, Rightclick the folder in Windows
 REM No Further editing needed, Logic part down here
 
 REM Pre-Setup
+For /f "tokens=1-2 delims=/:" %%a in ('time /t') do (set mytime=%%a%%b)
 	REM Make sure everything is as we assume - Sanity Check time <3
 		REM Check if User edited Password =) 
 		IF "%mypassword%" == "NEVERSHAREYOURBATCHFILESORPASSWORD!" Echo [ERROR:] You didn't change the password, please make sure to edit "mypassword" of the File "Launcher.bat" in %cd% (Rightclick and choose edit) && goto Quit
@@ -52,10 +55,10 @@ REM Pre-Setup
 			Echo [WARN:] Cannot locate Ngrok! (Optional Component) && ECHO Please make sure your ngrok.exe is actually saved under %NgrokLocation% or edit the variable NgrokLocation && Echo You can Download it from https://ngrok.com/download
 		)
 		REM Just "Log" our Slatefiles just in case, Code shouldn't delete stuff ;) 	
-		IF EXIST "%WalletLocation%\Backups\" (
+		IF EXIST "%Backupfolder%" (
 			If "%Debugmode%" == "TRUE" Echo [INFO:] Located Backup Folder for processed Slatefiles
 		) ELSE (
-			mkdir %WalletLocation%\Backups\
+			mkdir %Backupfolder%
 			If "%Debugmode%" == "TRUE" Echo [INFO:] Created Backup Folder for processed Slatefiles in %WalletLocation%\Backups\
 		)
 	REM Setup Node as needed for everything
@@ -84,7 +87,7 @@ REM Send a transaction, ask which mode
 			IF EXIST "%WalletLocation%\%TransactionFilename%" (
 				Echo [INFO:] Located a TransactionFile in Walletfolder, Moving to Backupfolder so we can create a new one
 				If "%Debugmode%" == "TRUE" Echo [INFO:]Moved old Slatefile to Backups before creating new one
-				move "%WalletLocation%\%TransactionFilename%" "%WalletLocation%\Backups\%DATE%_%TIME%__%TransactionFilename%" > nul 2>&1
+				move /Y "%WalletLocation%\%TransactionFilename%" "%WalletLocation%\Backups\%DATE%_%mytime%__%TransactionFilename%" > nul 2>&1
 			) ELSE (
 				REM not needed but here cuz im lazy, find the egg, keep it =) 
 			)
@@ -104,7 +107,7 @@ REM Send a transaction, ask which mode
 
 	REM Check if we can find old transactionfile!
 	IF EXIST "%WalletLocation%\%TransactionFilename%" If "%Debugmode%" == "TRUE" ECHO [INFO:] Located old Transactionfile in Walletfolder. Moving to Backupfolder
-	IF EXIST "%WalletLocation%\%TransactionFilename%" move "%WalletLocation%\%TransactionFilename%" "%Backupfolder%\%DATE%_%TIME%__%TransactionFilename%" > nul 2>&1
+	IF EXIST "%WalletLocation%\%TransactionFilename%" move /Y "%WalletLocation%\%TransactionFilename%" "%Backupfolder%\%DATE%_%mytime%__%TransactionFilename%" > nul 2>&1
 	) ELSE (
 		
 	)
@@ -116,13 +119,12 @@ REM Send a transaction, ask which mode
 	) ELSE (
 		If "%Debugmode%" == "TRUE" ECHO Searching a Responsefile in specified Folderss
 	)
-				echo %folderstocheckforslatefiles%
 				REM Call Regex Helper to quickly grab most current Slatefile if found in different folders
 		for /f "tokens=*" %%i in ('RegExCHLPR.exe %folderstocheckforslatefiles% .response') do set "foundSlateFile=%%i"
 		timeout 1
-				IF DEFINED foundSlateFile move "%foundSlateFile%" "%WalletLocation%\%Responsefilenameending%" > nul 2>&1
+				IF DEFINED foundSlateFile move /Y "%foundSlateFile%" "%WalletLocation%\%Responsefilenameending%" > nul 2>&1
 				If "%Debugmode%" == "TRUE" echo Current Slatefile according to Algo: %foundSlateFile%
-		timeout 3
+		timeout 1
 		REM Found it and moved it, no need to inform so bail 
 		IF EXIST "%WalletLocation%\%Responsefilenameending%" goto finishFinalize
 		REM If we arrive here no Slatefile was found, let user know Fileending might be different
@@ -133,9 +135,10 @@ REM Send a transaction, ask which mode
 	Echo. && Echo. && Echo.
 	mwc-wallet.exe -p %mypassword% finalize -i %Responsefilenameending%
 	REM Wait for Slatefile to be accessible again to move it when done (just to make sure it isnt locked)
-	timeout 5 > nul 2>&1
+	timeout 3
 	If "%Debugmode%" == "TRUE" ECHO Moving processed Slate File into Backup Folder
-	move "%WalletLocation%\%Responsefilenameending%" "%Backupfolder%\%DATE%_%TIME%__%Responsefilenameending%" > nul 2>&1
+	echo "%WalletLocation%\%Responsefilenameending%" "%Backupfolder%\%DATE%_%mytime%__%Responsefilenameending%" 
+	move /Y "%WalletLocation%\%Responsefilenameending%" "%Backupfolder%\%DATE%_%mytime%__%Responsefilenameending%" 
 	Echo. 
 		goto Redo
 :L
