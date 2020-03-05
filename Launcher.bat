@@ -12,6 +12,7 @@ REM Some examples provided below, if in Doubdt, Rightclick the folder in Windows
 	set NodeLocation=%cd%
 	set WalletLocation=%cd%
 	set NgrokLocation=%cd%
+	set RegexHelperLocation=%cd%
 	set TransactionFilename=transaction.tx 
 	set Responsefilenameending=tx.response
 	REM Set to "TRUE" for detailed messaged, to "FALSE" if not
@@ -66,7 +67,7 @@ For /f "tokens=1-2 delims=/:" %%a in ('time /t') do (set mytime=%%a%%b)
 	Echo [WARN:] MWC-Node starting please give it a Moment to synchronize! && Echo. && Echo. && Echo "What do you want to do? (Type letter and press Enter)"
 	REM Define Interactive modes (Ask for startup vars?)
 	
-	set /p mode=(S)end, (F)inalize, (L)isten, (I)nfo, (C)ommandprompt, (Q)uit 
+	set /p mode=(S)end, (F)inalize, (L)isten, (I)nfo, (Scan), (C)ommandprompt, (Q)uit
 	Echo.
 		GOTO %mode%
 REM ####Modes####
@@ -117,10 +118,11 @@ REM Send a transaction, ask which mode
 		Echo [INFO:] Located a Responsefile in Walletfolder. Going to assume it s the correct one and process
 		IF EXIST "%WalletLocation%\%Responsefilenameending%" goto finishFinalize
 	) ELSE (
+		IF not EXIST %RegexHelperLocation%\RegExCHLPR.exe goto warnnoslatefilealgo
 		If "%Debugmode%" == "TRUE" ECHO Searching a Responsefile in specified Folderss
 	)
 				REM Call Regex Helper to quickly grab most current Slatefile if found in different folders
-		for /f "tokens=*" %%i in ('RegExCHLPR.exe %folderstocheckforslatefiles% .response') do set "foundSlateFile=%%i"
+		for /f "tokens=*" %%i in ('%RegexHelperLocation%\RegExCHLPR.exe %folderstocheckforslatefiles% .response') do set "foundSlateFile=%%i"
 		timeout 1
 				IF DEFINED foundSlateFile move /Y "%foundSlateFile%" "%WalletLocation%\%Responsefilenameending%" > nul 2>&1
 				If "%Debugmode%" == "TRUE" echo Current Slatefile according to Algo: %foundSlateFile%
@@ -130,6 +132,11 @@ REM Send a transaction, ask which mode
 		REM If we arrive here no Slatefile was found, let user know Fileending might be different
 		Echo [WARN:] Cannot locate Responsefilename! (Not in Downloads nor in any of the specified Folders) 
 		Echo Please make sure your Responsefiles Name ends with %Responsefilenameending% 
+		goto finishFinalize
+		:warnnoslatefilealgo
+		Echo [WARN:] Cannot locate Responsefilename! (Not in %WalletLocation%) 
+		Echo Didn't find RegexCHLPR.exe to search for it in specified folders, please place Slatefile in your Wallet Folder
+	
 	:finishFinalize
 	REM Finalize a transaction
 	Echo. && Echo. && Echo.
@@ -147,7 +154,7 @@ REM Send a transaction, ask which mode
 	cd %WalletLocation%\ && start /min cmd.exe /c "mwc-wallet.exe -p %mypassword% listen"
 	Echo. && Echo. && Echo. && Echo Wallet is listening now =) 
 	rem Echo Enter your password in the newly entered windows and your Wallet will be listening!
-	set /p UsingNgrok=Should we start Ngrok? (Y)es or (N)o (Enter Letter in parenthesis and press Enter)   
+	If Exist %NgrokLocation%\ngrok.exe set /p UsingNgrok=Should we start Ngrok? (Y)es or (N)o (Enter Letter in parenthesis and press Enter)   
 	IF "%UsingNgrok%" == "Y" IF "%UsingNgrok%" == "y" IF "%UsingNgrok%" == "yes" IF "%UsingNgrok%" == "Yes"	goto ng
 	Echo. && Echo. 
 		goto Redo
@@ -163,12 +170,20 @@ REM Send a transaction, ask which mode
 	cd %WalletLocation%\
 	mwc-wallet.exe -p %mypassword% info
 	Echo.
+	goto Redo
+:Scan
+:scan
+	REM Go in Wallet Dir
+	cd %WalletLocation%\
+	mwc-wallet.exe -p %mypassword% scan -d
+	Echo.
+	goto Redo
 :Redo
 	Echo. && Echo. && Echo.
 	REM Define Interactive modes (Ask for startup vars?)
 	Echo "Anything else you want to do? (Type letter and press Enter)"
 	Echo.
-	set /p mode=(S)end, (F)inalize, (L)isten, (I)nfo, (C)ommandprompt, (Q)uit   
+	set /p mode=(S)end, (F)inalize, (L)isten, (I)nfo, (Scan), (C)ommandprompt, (Q)uit
 	Echo.
 		GOTO %mode%
 :Q
