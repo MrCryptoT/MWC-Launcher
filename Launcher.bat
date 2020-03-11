@@ -4,7 +4,6 @@ REM IMPORTANT: DONT SHARE YOUR BATCHFILES - TAKE SECURITY SERIOUS! STAY SAFE
 REM Edit your password so you don't constantly need to confirm the password when interacting with the cli Wallet!  
 	set mypassword=NEVERSHAREYOURBATCHFILESORPASSWORD!
 	
-	
 REM Only replace the following Variables if necessary (not everything in 1 folder)
 
 REM Define Folders of our executables (by default our execution directory)
@@ -154,13 +153,17 @@ REM Send a transaction, ask which mode
 	cd %WalletLocation%\ && start /min cmd.exe /c "mwc-wallet.exe -p %mypassword% listen"
 	Echo. && Echo. && Echo. && Echo Wallet is listening now =) 
 	rem Echo Enter your password in the newly entered windows and your Wallet will be listening!
-	If Exist %NgrokLocation%\ngrok.exe set /p UsingNgrok=Should we start Ngrok? (Y)es or (N)o (Enter Letter in parenthesis and press Enter)   
-	IF "%UsingNgrok%" == "Y" IF "%UsingNgrok%" == "y" IF "%UsingNgrok%" == "yes" IF "%UsingNgrok%" == "Yes"	goto ng
+	If not Exist %NgrokLocation%\ngrok.exe goto Redo
+	set /p UsingNgrok=Should we start Ngrok? (Y)es or (N)o (Enter Letter in parenthesis and press Enter)   
+	IF "%UsingNgrok%" == "y"  goto ngrokjumper
+	IF "%UsingNgrok%" == "Y" goto ngrokjumper
+	IF "%UsingNgrok%" == "yes" goto ngrokjumper
+	IF "%UsingNgrok%" == "Yes" goto ngrokjumper
 	Echo. && Echo. 
 		goto Redo
-:ng
+:ngrokjumper
 	cd %NgrokLocation%\
-	start cmd.exe /c ngrok.exe http 3415
+	start /min cmd.exe /c "ngrok.exe http 3415"
 	ECHO Use The HTTP Forwarding Addres displayed by Ngrok for Withdrawals (Only valid for 8 Hours!)
 	Echo.
 		goto Redo
@@ -170,14 +173,14 @@ REM Send a transaction, ask which mode
 	cd %WalletLocation%\
 	mwc-wallet.exe -p %mypassword% info
 	Echo.
-	goto Redo
+		goto Redo
 :Scan
 :scan
 	REM Go in Wallet Dir
 	cd %WalletLocation%\
 	mwc-wallet.exe -p %mypassword% scan -d
 	Echo.
-	goto Redo
+		goto Redo
 :Redo
 	Echo. && Echo. && Echo.
 	REM Define Interactive modes (Ask for startup vars?)
