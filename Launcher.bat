@@ -212,7 +212,6 @@ REM Author MrT, Version 0.5
 :: Just a "Wrapper" around MWC Node and Wallet to make interaction a bit more Userfriendly
 :: Replace the Variables if Needed I assume the following: 
 :: This File, MWC-Wallet.exe and MWC.exe are all in the same Folder!
-:: Hint: You will need to type your password for some interactions, please stay safe out there!
 :: Dev Notes: Tested: 
 ::					-Listen 
 ::					-Send (File) 
@@ -220,5 +219,3 @@ REM Author MrT, Version 0.5
 ::					-CmdPrompt
 ::					-Quit
 ::					-Finalize
-
-REM Never share customized scripts that might contain passwords! (Hence this Script doesnt ask for a password or gives a way to include it)
