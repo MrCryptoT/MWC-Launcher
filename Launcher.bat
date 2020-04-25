@@ -12,12 +12,12 @@ REM Some examples provided below, if in Doubdt, Rightclick the folder in Windows
 	set WalletLocation=%cd%
 	set NgrokLocation=%cd%
 	set RegexHelperLocation=%cd%
-	set TransactionFilename=transaction.tx 
+	set TransactionFilename=transaction.tx
 	set Responsefilenameending=tx.response
 	REM Set to "TRUE" for detailed messaged, to "FALSE" if not
 	set Debugmode=TRUE
 	REM Set to "TRUE" if Launcher should Quit instantly when choosing "quit"
-	set CloseFast=TRUE
+	set CloseFast=FALSE
 	set Backupfolder=%cd%\Backups
 	REM An Example if the Wallet is in a subfolder called "mwc-wallet" => 
 		REM set WalletLocation=%cd%\mwc-wallet 
@@ -25,12 +25,12 @@ REM Some examples provided below, if in Doubdt, Rightclick the folder in Windows
 		REM set NodeLocation=%cd%\..\
 	REM An Example for a copied path => 
 		REM set NodeLocation=C:\_Custom\Bitcoin_Wallets\mwc\CLI\mwc-wallet
-	REM Define which folders to search for Slatefiles, supply more by adding &&"folderlocation"&&"folderpath2" and so on 
+	REM Define which folders to search for Slatefiles, supply more by adding \\"folderlocation"\\"folderpath2" and so on 
 	set folderstocheckforslatefiles=c:\users\%username%\downloads\\%NodeLocation%\\%cd%\\c:\users\%username%\Desktop
-REM No Further editing needed, Logic part down here
+	REM No Further editing needed, Logic part down here
 
-REM Pre-Setup
-For /f "tokens=1-2 delims=/:" %%a in ('time /t') do (set mytime=%%a%%b)
+	REM Pre-Setup
+	For /f "tokens=1-2 delims=/:" %%a in ('time /t') do (set mytime=%%a%%b)
 	REM Make sure everything is as we assume - Sanity Check time <3
 		REM Check if User edited Password =) 
 		IF "%mypassword%" == "NEVERSHAREYOURBATCHFILESORPASSWORD!" Echo [ERROR:] You didn't change the password, please make sure to edit "mypassword" of the File "Launcher.bat" in %cd% (Rightclick and choose edit) && goto Quit
@@ -163,7 +163,7 @@ REM Send a transaction, ask which mode
 		goto Redo
 :ngrokjumper
 	cd %NgrokLocation%\
-	start /min cmd.exe /c "ngrok.exe http 3415"
+	start cmd.exe /c "ngrok.exe http 3415"
 	ECHO Use The HTTP Forwarding Addres displayed by Ngrok for Withdrawals (Only valid for 8 Hours!)
 	Echo.
 		goto Redo
